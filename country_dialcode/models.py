@@ -3,6 +3,7 @@
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from country_dialcode.intermediate_model_base_class import Model
+from django.core.validators import MaxValueValidator
 
 prefix_type_list = ((0, "Landline"),
                     (1, "Mobile"),
@@ -21,7 +22,7 @@ class Country(Model):
                                    help_text=_("Enter Country Code. e.g. USA - ISO alpha-3"))
     iso2 = models.CharField(verbose_name=_('ISO alpha-2'),
                             max_length=2, default='')
-    countryprefix = models.IntegerField(max_length=12, verbose_name=_('Prefix'),
+    countryprefix = models.IntegerField(validators=[MaxValueValidator(999999999999)], verbose_name=_('Prefix'),
                                         help_text=_("Enter Country Prefix. e.g. 1"))
     countryname = models.CharField(max_length=240, verbose_name=_('Name'),
                                    help_text=_("Enter Country Name. e.g. United States"))
@@ -31,7 +32,7 @@ class Country(Model):
         verbose_name = _("country")
         verbose_name_plural = _("countries")
 
-    def __unicode__(self):
+    def __str__(self):
         return "%s" % (self.countrycode)
 
 
@@ -59,7 +60,7 @@ class Prefix(Model):
         verbose_name_plural = _("prefixes")
         ordering = ["prefix"]
 
-    def __unicode__(self):
+    def __str__(self):
         return "%d" % (self.prefix)
 
     def country_name(self):
